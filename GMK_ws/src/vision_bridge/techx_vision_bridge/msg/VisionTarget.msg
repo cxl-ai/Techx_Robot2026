@@ -1,0 +1,15 @@
+std_msgs/Header header
+uint32 seq
+uint8 protocol_version
+bool has_target
+bool valid_xyz
+uint8 target_count
+uint8 track_id
+uint8 class_id
+uint8 color
+float32 confidence
+float32 u
+float32 v
+float32 x
+float32 y
+float32 z

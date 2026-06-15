@@ -1,0 +1,18 @@
+module ltr
+{
+    module msg
+    {
+        module dds_
+        {
+            struct VelCmd_
+            {
+                float lin_vx;
+                float lin_vy;
+                float lin_vz;
+                float ang_wx;
+                float ang_wy;
+                float ang_wz;
+            };
+        };
+    };
+};

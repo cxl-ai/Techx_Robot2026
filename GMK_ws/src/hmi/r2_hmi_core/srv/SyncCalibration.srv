@@ -1,0 +1,8 @@
+# SyncCalibration.srv - R2 HMI 标定数据同步服务
+# Request: 阵营颜色 + 梅林区12个方块状态
+int8 team_color        # 0=红方, 1=蓝方
+int8[12] meihua_states # 0=空, 1=真R2KFS, 2=假KFS
+---
+# Response: 下发结果
+bool success
+string message

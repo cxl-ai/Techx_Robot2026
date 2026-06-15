@@ -1,0 +1,26 @@
+# systemd unit template for headless boot auto-start of the Jetson vision.
+# Do NOT edit @REPO@/@USER@ by hand; run scripts/install_vision_service.sh which
+# fills them in and installs to /etc/systemd/system/techx-vision.service.
+[Unit]
+Description=TECHX Robocon Jetson vision (headless)
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=120
+StartLimitBurst=10
+
+[Service]
+Type=simple
+User=@USER@
+WorkingDirectory=@REPO@
+# Boot autostart toggle + overrides; '-' = ok if missing. Edit TECHX_AUTOSTART here.
+EnvironmentFile=-@REPO@/scripts/autostart.env
+# Give USB/camera a few seconds to enumerate after boot.
+ExecStartPre=/bin/sleep 5
+ExecStart=/bin/bash @REPO@/scripts/run_vision_service.sh
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,5 @@
+bool is_goalpoint
+---
+bool success
+string message
+string[] floor_indices

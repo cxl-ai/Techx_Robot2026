@@ -1,0 +1,40 @@
+<!-- terrain_analysis_ext.launch - 扩展地形分析节点(远距离) -->
+<!-- 订阅: /Odometry, /cloud_registered, /joy, /cloud_clearing, /terrain_map -->
+<!-- 发布: /terrain_map_ext (扩展范围的地形点云，融合近距离结果) -->
+<launch>
+
+  <!-- 是否启用天花板过滤(室内环境建议开启) -->
+  <arg name="checkTerrainConn" default="true"/>
+
+  <node pkg="terrain_analysis_ext" exec="terrainAnalysisExt" name="terrainAnalysisExt" output="screen" respawn="true" respawn_delay="2.0">
+    <!-- ===== 点云处理参数 ===== -->
+    <param name="scanVoxelSize" value="0.1" />           <!-- 降采样体素大小(m)，远距离可用较大值 -->
+    <param name="decayTime" value="10.0" />              <!-- 点云衰减时间(s)，远距离需要更长保留 -->
+    <param name="noDecayDis" value="0.0" />              <!-- 不衰减距离(m)，0表示全部受时间衰减 -->
+    <param name="clearingDis" value="30.0" />            <!-- 手动清除地图的影响半径(m) -->
+
+    <!-- ===== 地面估计参数 ===== -->
+    <param name="useSorting" value="false" />            <!-- false:最低点法 true:分位数排序法 -->
+    <param name="quantileZ" value="0.1" />               <!-- Z分位数，取较低点作为地面 -->
+    <param name="vehicleHeight" value="0.75" />           <!-- 车辆高度(m)，障碍物高度阈值 -->
+
+    <!-- ===== 体素更新参数 ===== -->
+    <param name="voxelPointUpdateThre" value="100" />    <!-- 触发体素更新的点数阈值 -->
+    <param name="voxelTimeUpdateThre" value="2.0" />     <!-- 触发体素更新的时间阈值(s) -->
+
+    <!-- ===== 高度过滤参数 ===== -->
+    <param name="lowerBoundZ" value="-1.0" />            <!-- 相对车辆最小高度(m) -->
+    <param name="upperBoundZ" value="1.5" />             <!-- 相对车辆最大高度(m) -->
+    <param name="disRatioZ" value="0.3" />               <!-- 距离-Z补偿系数 -->
+
+    <!-- ===== 地形连通性检查(天花板过滤) ===== -->
+    <param name="checkTerrainConn" value="$(var checkTerrainConn)" />  <!-- 是否检查地形连通性 -->
+    <param name="terrainConnThre" value="0.5" />         <!-- 连通判定高度差阈值(m) -->
+    <param name="terrainUnderVehicle" value="-0.75" />   <!-- 车辆下方地面相对高度(m) -->
+    <param name="ceilingFilteringThre" value="2.0" />    <!-- 天花板过滤高度阈值(m) -->
+
+    <!-- ===== 地图融合参数 ===== -->
+    <param name="localTerrainMapRadius" value="4.0" />   <!-- 局部地图半径(m)，此范围内使用terrain_map -->
+  </node>
+
+</launch>

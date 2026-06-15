@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>open3d_loc</name>
+  <version>0.0.0</version>
+
+  <description>
+    ROS 2 package for global localization using Open3D (point cloud map and registration).
+  </description>
+
+  <maintainer email="maintainer@example.invalid">open3d_loc</maintainer>
+
+  <license>BSD</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>rosidl_default_generators</buildtool_depend>
+
+  <depend>geometry_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>rclcpp</depend>
+  <depend>rcutils</depend>
+  <depend>std_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>tf2</depend>
+  <depend>tf2_ros</depend>
+  <depend>tf2_geometry_msgs</depend>
+  <depend>tf2_eigen</depend>
+  <depend>tf2_sensor_msgs</depend>
+  <depend>eigen3_cmake_module</depend>
+  <depend>pcl_conversions</depend>
+  <depend>pcl_ros</depend>
+  <depend>cv_bridge</depend>
+  <depend>image_transport</depend>
+  <depend>urdf</depend>
+  <build_depend>libopen3d-dev</build_depend>
+  <build_export_depend>libopen3d-dev</build_export_depend>
+  <exec_depend>libopen3d-dev</exec_depend>
+  <exec_depend>rviz2</exec_depend>
+
+  <build_depend>message_runtime</build_depend>
+
+  <exec_depend>rosidl_default_runtime</exec_depend>
+  <exec_depend>message_runtime</exec_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+  <test_depend>ament_cmake_gtest</test_depend>
+
+  <member_of_group>rosidl_interface_packages</member_of_group>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

@@ -1,0 +1,14 @@
+module ltr
+{
+    module msg
+    {
+        module dds_
+        {
+            struct SportModeCmd_
+            {
+                uint8 device_id;
+                uint8 mode;
+            };
+        };
+    };
+};

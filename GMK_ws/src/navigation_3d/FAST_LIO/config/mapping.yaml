@@ -1,0 +1,49 @@
+/**:
+  ros__parameters:
+    feature_extract_enable: false        # 特征提取开关
+    point_filter_num: 3                  # 点云降采样倍数
+    max_iteration: 3                     # 最大迭代次数
+    filter_size_surf: 0.2                # 面特征滤波尺寸(m)
+    filter_size_map: 0.2                 # 地图体素尺寸(m)
+    cube_side_length: 1000.0             # 地图立方体边长(m)
+    runtime_pos_log_enable: false        # 实时轨迹日志
+    map_file_path: "~/nav_ws/project/map/map.pcd"          # 地图保存路径
+
+    common:
+      lid_topic:  "/livox/lidar"         # 雷达话题
+      imu_topic:  "/livox/imu"           # IMU话题
+      time_sync_en: false                # 时间同步(无外源时开启)
+      time_offset_lidar_to_imu: 0.0      # 雷达→IMU时间偏移(s)，未知填0
+
+    preprocess:
+      lidar_type: 1                      # 雷达型号：1=Livox 2=Velodyne 3=Ouster 4=其它
+      scan_line:  2                      # Livox mid360 线数
+      blind: 0.1                         # 盲区距离(m)
+      timestamp_unit: 3                  # 时间戳单位：0=s 1=ms 2=us 3=ns
+      scan_rate: 10                      # 扫描频率(Hz)
+
+    mapping:
+      acc_cov: 0.1                       # 加速度计噪声
+      gyr_cov: 0.1                       # 陀螺仪噪声
+      b_acc_cov: 0.0001                  # 加计零偏噪声
+      b_gyr_cov: 0.0001                  # 陀螺零偏噪声
+      fov_degree: 360.0                  # 视场角(°)
+      det_range: 100.0                   # 最大测距(m)
+      extrinsic_est_en: true             # 在线标定外参
+      extrinsic_T: [ -0.011, -0.02329, 0.04412 ]   # 外参平移(x,y,z)
+      extrinsic_R: [ 1., 0., 0.,         # 外参旋转(行主序)
+                     0., 1., 0.,
+                     0., 0., 1.]
+      enable_openmp: true                # 并行加速
+
+    publish:
+      path_en: true                      # 发布轨迹
+      effect_map_en: false               # 发布有效点云
+      map_en: true                       # 发布地图
+      scan_publish_en: true              # 发布扫描点云
+      dense_publish_en: false            # 稠密点云
+      scan_bodyframe_pub_en: false        # 发布机体坐标系点云
+
+    pcd_save:
+      pcd_save_en: true                  # 保存PCD
+      interval: -1                       # 每文件帧数，-1=单文件

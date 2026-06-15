@@ -1,0 +1,10 @@
+<library path="waypoint_editor_rviz_plugin">
+  <class name="waypoint_editor_rviz_plugin/WaypointEditorPanel"
+         type="waypoint_editor_rviz_plugin::WaypointEditorPanel"
+         base_class_type="rviz_common::Panel">
+    <description>
+      Panel for selecting and nudging waypoint_manager waypoint/goalpoint and writing back to CSV.
+    </description>
+  </class>
+</library>
+

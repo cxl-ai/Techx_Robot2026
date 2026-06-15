@@ -1,0 +1,45 @@
+<!-- terrain_analysis.launch - 近距离地形分析节点 -->
+<!-- 订阅: /Odometry, /cloud_registered, /joy, /map_clearing -->
+<!-- 发布: /terrain_map (带高程信息的地形点云) -->
+<launch>
+
+  <node pkg="terrain_analysis" exec="terrainAnalysis" name="terrainAnalysis" output="screen" respawn="true" respawn_delay="2.0">
+    <!-- ===== 点云处理参数 ===== -->
+    <param name="scanVoxelSize" value="0.05" />          <!-- 降采样体素大小(m)，越小精度越高 -->
+    <param name="decayTime" value="2.0" />               <!-- 点云衰减时间(s)，超时的点会被移除 -->
+    <param name="noDecayDis" value="3.0" />              <!-- 不衰减距离(m)，此范围内点云不受时间衰减 -->
+    <param name="clearingDis" value="4.5" />             <!-- 手动清除地图的影响半径(m) -->
+
+    <!-- ===== 地面估计参数 ===== -->
+    <param name="useSorting" value="false" />            <!-- false:最低点法 true:分位数排序法 -->
+    <param name="quantileZ" value="0.25" />              <!-- Z分位数(0-1)，仅useSorting=true有效 -->
+    <param name="limitGroundLift" value="true" />       <!-- 是否限制地面抬升 -->
+    <param name="maxGroundLift" value="0.45" />          <!-- 最大允许地面抬升高度(m) -->
+
+    <param name="considerDrop" value="false" />           <!-- 是否考虑下降台阶作为障碍 -->
+
+    <!-- ===== 动态障碍物过滤参数 ===== -->
+    <param name="clearDyObs" value="true" />             <!-- 是否清除动态障碍物(行人/车辆) -->
+    <param name="minDyObsDis" value="0.3" />             <!-- 动态检测最小距离(m) -->
+    <param name="minDyObsAngle" value="0.0" />           <!-- 动态检测最小仰角(°) -->
+    <param name="minDyObsRelZ" value="-0.5" />           <!-- 动态检测相对Z基准(m) -->
+    <param name="absDyObsRelZThre" value="0.2" />        <!-- 动态检测绝对Z阈值(m) -->
+    <param name="minDyObsVFOV" value="-16.0" />          <!-- 动态检测垂直视场下限(°) -->
+    <param name="maxDyObsVFOV" value="16.0" />           <!-- 动态检测垂直视场上限(°) -->
+    <param name="minDyObsPointNum" value="1" />          <!-- 动态障碍物最小点数阈值 -->
+
+    <!-- ===== 无数据区域处理参数 ===== -->
+    <param name="noDataObstacle" value="false" />        <!-- 是否将无数据区域视为障碍 -->
+    <param name="noDataBlockSkipNum" value="0" />        <!-- 边缘跳过的体素层数 -->
+    <param name="minBlockPointNum" value="10" />         <!-- 有效体素最小点数 -->
+
+    <!-- ===== 高度过滤参数 ===== -->
+    <param name="vehicleHeight" value="0.75" />           <!-- 车辆高度(m)，超过此高度差的点被过滤 -->
+    <param name="voxelPointUpdateThre" value="100" />    <!-- 触发体素更新的点数阈值 -->
+    <param name="voxelTimeUpdateThre" value="2.0" />     <!-- 触发体素更新的时间阈值(s) -->
+    <param name="minRelZ" value="-1.0" />                <!-- 相对车辆最小高度(m) -->
+    <param name="maxRelZ" value="1.5" />                 <!-- 相对车辆最大高度(m) -->
+    <param name="disRatioZ" value="0.2" />               <!-- 距离-Z补偿系数，远处放宽Z范围 -->
+  </node>
+
+</launch>

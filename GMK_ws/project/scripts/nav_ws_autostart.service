@@ -1,0 +1,22 @@
+[Unit]
+Description=nav_ws autostart (local_planner + waypoint_search)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=lightyear
+Group=lightyear
+WorkingDirectory=/home/lightyear/nav_ws
+Environment=HOME=/home/lightyear
+ExecStart=/home/lightyear/nav_ws/project/scripts/nav_ws_autostart.sh
+Restart=on-failure
+RestartSec=2
+KillMode=control-group
+TimeoutStopSec=30
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+

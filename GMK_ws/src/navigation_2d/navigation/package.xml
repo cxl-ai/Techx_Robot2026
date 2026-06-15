@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>navigation</name>
+  <version>1.0.0</version>
+  <description>
+    基于 nav2 的 2D 导航包。
+    定位由 FAST-LIO（里程计）和 open3d_loc（重定位）提供，
+    使用 A* 全局规划器（NavFn）和 DWB 局部规划器。
+  </description>
+  <maintainer email="lhl@todo.todo">lhl</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- nav2 组件 -->
+  <exec_depend>nav2_map_server</exec_depend>
+  <exec_depend>nav2_planner</exec_depend>
+  <exec_depend>nav2_navfn_planner</exec_depend>
+  <exec_depend>nav2_controller</exec_depend>
+  <exec_depend>nav2_bt_navigator</exec_depend>
+  <exec_depend>nav2_behaviors</exec_depend>
+  <exec_depend>nav2_smoother</exec_depend>
+  <exec_depend>nav2_lifecycle_manager</exec_depend>
+  <exec_depend>nav2_velocity_smoother</exec_depend>
+  <exec_depend>nav2_waypoint_follower</exec_depend>
+  <exec_depend>nav2_costmap_2d</exec_depend>
+  <exec_depend>dwb_core</exec_depend>
+  <exec_depend>dwb_critics</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

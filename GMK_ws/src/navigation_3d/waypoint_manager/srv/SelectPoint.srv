@@ -1,0 +1,5 @@
+bool is_goalpoint
+string floor_index
+---
+bool success
+string message

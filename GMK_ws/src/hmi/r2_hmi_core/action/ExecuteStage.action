@@ -1,0 +1,9 @@
+# ExecuteStage.action - R2 阶段执行 Action
+# Goal: 执行指定赛段
+uint8 stage_id
+---
+# Result: 执行结果
+bool completed
+---
+# Feedback: 当前步骤描述
+string step_description

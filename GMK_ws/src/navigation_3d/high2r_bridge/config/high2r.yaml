@@ -1,0 +1,19 @@
+# ==================== high2r_bridge 参数配置 ====================
+# 用于 high2r_node：订阅 /high2r_cmd，通过 DDS 下发速度指令到底盘
+
+high2r_node:
+  ros__parameters:
+    # DDS 与话题
+    # dds_interface: 本机网口名，需与底盘同网段。用 ip link 查看，如 eth0、enp45s0、wlan0
+    dds_interface: "enp2s0"
+    # dds_interface: "enp45s0"
+    
+    cmd_topic: "/high2r_cmd"     # 订阅的 Twist 指令话题
+
+    # 速度限幅 (m/s, rad/s)
+    max_vx: 1.0                  # X 方向最大线速度
+    max_vy: 0.01                 # Y 方向最大线速度
+    max_yaw_rate: 2.0            # 最大偏航角速度
+
+    # 速度平滑
+    smoothing_alpha: 0.5         # 一阶滤波系数 (0~1)，越小越平滑

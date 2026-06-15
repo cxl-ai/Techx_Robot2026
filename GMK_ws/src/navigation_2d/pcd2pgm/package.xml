@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>pcd2pgm</name>
+  <version>1.0.0</version>
+  <description>
+    将三维点云文件（.pcd）转换为 ROS2 nav2_map_server 标准格式的二维占用栅格地图（.pgm + .yaml）。
+    借助 octomap 完成三维体素化与二维投影，输出与 octomap_server 一致的语义结果。
+  </description>
+  <maintainer email="653091941@qq.com">wangzhiyong</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- ROS2 节点基础（参数声明、日志输出）-->
+  <depend>rclcpp</depend>
+
+  <!-- octomap C++ 库（三维体素化核心）-->
+  <depend>octomap</depend>
+
+  <!-- PCL（点云加载与预处理滤波）-->
+  <build_depend>pcl_ros</build_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

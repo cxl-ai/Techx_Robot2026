@@ -1,0 +1,31 @@
+# ==================== nav_node 参数配置 ====================
+# 用于导航节点，接收 /path 话题进行路径跟踪
+nav_node:
+  ros__parameters:
+    # ==================== Planning 规划参数 ====================
+    # 用于 nav_node 的路径跟踪和规划
+    
+    planning.resolution: 0.05              # 地图分辨率 (m)，网格大小
+    planning.map_voxel_num: 400            # 地图体素数量，总地图大小 = resolution * map_voxel_num
+    
+    # 距离阈值参数
+    planning.dist_static_x_th: 0.5         # 静态障碍物X方向距离阈值 (m)，用于CheckSafety函数：检测机器人前方(p(0) < dist_static_x_th + 0.1)的障碍物
+    planning.dist_static_y_th: 0.25        # 静态障碍物Y方向距离阈值 (m)，用于CheckSafety函数：检测机器人左右两侧(-dist_static_y_th < p(1) < dist_static_y_th)的障碍物，若检测到障碍物则停止机器人
+    
+    # 路径跟踪参数
+    planning.dist_th: 0.3                  # 路径点距离阈值 (m)，判断是否需要选择新的参考点
+    planning.time_th: 3.0                  # 时间阈值 (s)，超时后强制选择新参考点
+    planning.arrive_th: 0.15               # 到达阈值 (m)，距离参考点小于此值认为到达
+    
+    # 动态检查参数
+    planning.dyn_check_num: 10             # 动态障碍物检查点数量
+    planning.run_time: 3.0                 # 运行时间 (s)
+    planning.stop_time: 0.8                # 停止时间 (s)
+    
+    # ==================== Control 控制参数 ====================
+    # 用于控制器的速度和角速度限制
+    
+    control.max_v: 0.8                    # 最大线速度 (m/s)
+    control.max_w: 1.0                    # 最大角速度 (rad/s)
+    control.nested: true                   # 是否使用嵌套控制（同时限制线速度和角速度）
+    control.stairs_speed_adjustment: -0.3  # 上楼时速度调整值 (m/s)，负数=减速，正数=加速

@@ -1,0 +1,31 @@
+# TECHx_vision Jetson Orin NX 依赖清单
+# JetPack 6 (R36) + Python 3.10 + CUDA 12.6
+#
+# 安装方法:
+#   conda create -n techx python=3.10 -y
+#   conda activate techx
+#   bash setup_jetson.sh
+
+# === 核心依赖 (pip install) ===
+ultralytics>=8.0
+opencv-python>=4.8
+numpy>=1.26,<2.0
+Pillow>=10.0
+
+# === ONNX 推理 (CPU 回退) ===
+onnxruntime>=1.18
+
+# === 串口通信 (可选) ===
+pyserial>=3.5
+
+# === 奥比中光深度相机 SDK ===
+# 预编译 wheel: wheels/linux-aarch64/pyorbbecsdk2-2.1.1-cp310-cp310-manylinux_2_27_aarch64.whl
+
+# === Jetson GPU 加速 (手动安装) ===
+# 1. NVIDIA Jetson PyTorch (CUDA 12.6 原生支持):
+#    pip install https://developer.download.nvidia.com/compute/redist/jp/v61/pytorch/torch-2.5.0a0+872d972e41.nv24.08.17622132-cp310-cp310-linux_aarch64.whl --no-deps
+#
+# 2. torchvision (兼容补丁自动处理 C++ 算子不兼容):
+#    pip install torchvision==0.20.0 --no-deps
+#
+# 3. 验证 GPU: python -c "import torch; print(torch.cuda.is_available())"

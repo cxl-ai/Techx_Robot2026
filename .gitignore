@@ -1,0 +1,39 @@
+﻿# ROS 2 build artifacts
+build/
+install/
+log/
+*.log
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.class
+*.so
+.Python
+env/
+venv/
+.venv/
+
+# C/C++ compiled binaries
+*.o
+*.obj
+*.gch
+*.d
+
+# ROS bags and temporary datasets
+*.bag
+*.db3
+*.bag.active
+*.mcap
+
+# IDE & OS files
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+
+# Jetson runs / logs
+Jetson_ws/runs/*
+!Jetson_ws/runs/.gitkeep

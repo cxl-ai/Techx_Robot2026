@@ -1,0 +1,86 @@
+/**:
+  ros__parameters:
+    # ==================== 路径库参数 ====================
+    # 用于 localPlanner 节点的障碍物检测和路径搜索
+    
+    laserVoxelSize: 0.05                   # 激光点云体素滤波大小 (m)，降采样分辨率
+    terrainVoxelSize: 0.2                  # 地形点云体素滤波大小 (m)
+    useTerrainAnalysis: true               # 是否使用地形分析，true使用terrain_map，false使用原始激光点云
+    
+    # ==================== 障碍物检查参数 ====================
+    checkObstacle: true                    # 是否检查障碍物
+    checkRotObstacle: true                 # 是否检查旋转时的障碍物（限制近距离障碍物方向的旋转）
+    adjacentRange: 4.25                    # 障碍物检测范围 (m)，以机器人为中心的圆形区域
+
+    obstacleHeightThre: 0.5               # 【楼梯通行】障碍物高度阈值 (m)，需大于台阶高度(~20cm)
+    stairsDetectionThre: 1.0              # 楼梯检测高度阈值 (m)，目标高度差超过此值认为需要上楼
+    stairsHeightIncrease: 0.5             # 上楼时障碍物阈值提高值 (m)，避免楼梯被识别为障碍物
+
+    groundHeightThre: 0.10                 # 地面高度阈值 (m)，低于此值认为是地面
+    costHeightThre: 0.6                   # 【楼梯通行】代价高度阈值 (m)，用于计算地形代价
+    costScore: 0.02                        # 代价分数权重，地形代价对路径评分的影响
+    useCost: false                         # 是否使用地形代价（启用后会根据地形起伏调整路径评分）
+    ignoreObsX: 0.4                        # base坐标系忽略障碍矩形半宽(m)：满足 |x|<ignoreObsX 且 |y|<ignoreObsY 的点不参与碰撞检查
+    ignoreObsY: 0.6                        # base坐标系忽略障碍矩形半长(m)：建议略大于车体/安装件范围；设为0表示禁用
+    
+    # ==================== 路径点参数 ====================
+    pointPerPathThre: 2                    # 路径碰撞点数阈值，路径上碰撞点数超过此值则该路径不可行
+    minRelZ: -0.5                          # 相对最小Z高度 (m)，低于机器人此高度的点云会被过滤
+    maxRelZ: 0.5                           # 【楼梯通行】相对最大Z高度 (m)，放宽以检测多级台阶
+    
+    # ==================== 方向参数 ====================
+    dirWeight: 0.02                        # 方向权重，路径终点方向与目标方向偏差的惩罚系数
+    dirThre: 90.0                          # 方向阈值 (度)，超过此角度的路径会被过滤
+    dirToVehicle: false                    # 方向是否相对于车辆坐标系（false表示相对于目标方向）
+    
+    # ==================== 路径缩放参数 ====================
+    # 当无法找到可行路径时，系统会自动缩小路径尺度和搜索范围重试
+    
+    pathScale: 1.0                         # 路径尺度，1.0表示原始大小
+    minPathScale: 0.3                      # 最小路径尺度，缩放下限（防止路径过小）
+    pathScaleStep: 0.25                    # 路径缩放步长，每次缩小的比例
+    pathScaleBySpeed: true                 # 是否根据速度缩放路径（速度慢时使用较小路径）
+    
+    minPathRange: 0.5                      # 最小路径搜索范围 (m)
+    pathRangeStep: 0.5                     # 路径范围缩减步长 (m)
+    pathRangeBySpeed: true                 # 是否根据速度调整搜索范围
+    pathCropByGoal: true                   # 是否根据目标点裁剪路径（超过目标点的部分会被截断）
+    
+    # ==================== 自动模式参数 ====================
+    joyToSpeedDelay: 2.0                   # 手柄到速度控制的延迟时间 (s)
+    joyToCheckObstacleDelay: 5.0           # 手柄到障碍物检查的延迟时间 (s)
+    goalClearRange: 0.5                    # 目标点清除范围 (m)，距离目标点小于此值时清除障碍物检查
+    
+    # ==================== 角度过滤参数 ====================
+    # 路径方向限制，只保留前方一定范围内的路径
+    # rotDir 索引范围: 0-35，对应 0°-350°（每10度一个方向）
+
+    minRotDir: 8                          # 最小旋转方向索引（保留路径的最小角度方向）
+    maxRotDir: 28                           # 最大旋转方向索引（保留路径的最大角度方向）
+    
+    # ==================== 车辆参数 ====================
+    # 车辆尺寸和传感器偏移参数
+    
+    vehicleLength: 0.9                     # 车辆长度 (m)
+    vehicleWidth: 0.45                      # 车辆宽度 (m)
+    sensorOffsetX: 0.40                    # 激光雷达X方向偏移 (m)，相对于车辆中心
+    sensorOffsetY: 0.0                     # 激光雷达Y方向偏移 (m)，相对于车辆中心
+    
+    # ==================== 运动参数 ====================
+    # 速度和行驶模式参数
+    
+    twoWayDrive: false                      # 是否允许双向行驶（允许倒车）
+    maxSpeed: 2.0                          # 最大速度 (m/s)，用于路径缩放和速度控制
+    autonomyMode: true                     # 是否启用自动模式
+    autonomySpeed: 2.0                     # 自动模式下的速度 (m/s)
+    
+    # ==================== 目标点参数 ====================
+    # 用于目标点跟踪和到达判断
+    
+    goalX: 0.0                             # 初始目标点X坐标 (m)
+    goalY: 0.0                             # 初始目标点Y坐标 (m)
+    goalZ: 0.0                             # 初始目标点Z坐标 (m)
+    goalThre: 0.8                          # XY平面到达阈值 (m)，XY距离小于此值认为到达
+    goalZThre: 3.0                         # Z方向到达阈值 (m)，Z坐标差值的绝对值小于此值认为到达
+    advance_waypoint_service: advance_waypoint  # 航点切换服务名（调用waypoint_manager）
+

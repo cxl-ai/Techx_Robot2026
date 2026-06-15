@@ -1,0 +1,5 @@
+int32 floor    # 要设置的楼层状态
+---
+bool success
+string message
+int32 previous_floor    # 之前的楼层状态

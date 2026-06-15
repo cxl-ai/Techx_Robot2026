@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# IDE
+.idea/
+.vscode/
+.claude/
+*.swp
+*.swo
+*~
+
+# Logs
+logs/*.log
+logs/*.txt
+Log/*.log
+Log/*.txt
+
+# Models (large binaries, manage separately)
+models/**/*.pt
+models/**/*.onnx
+models/**/*.engine
+
+# Dependencies / wheels (provided by setup_jetson.sh)
+wheels/
+
+# Backup files
+*.bak
+
+# SDK wheels (large files)
+*.whl
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Conda
+.env/

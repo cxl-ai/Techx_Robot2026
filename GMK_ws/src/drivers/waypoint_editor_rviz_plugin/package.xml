@@ -1,0 +1,24 @@
+<package format="3">
+  <name>waypoint_editor_rviz_plugin</name>
+  <version>0.0.1</version>
+  <description>RViz2 Panel to edit waypoint_manager waypoints/goalpoints via services</description>
+  <maintainer email="user@todo.todo">user</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>rviz2</depend>
+  <depend>rviz_common</depend>
+  <depend>pluginlib</depend>
+  <depend>qtbase5-dev</depend>
+  <depend>waypoint_manager</depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
+

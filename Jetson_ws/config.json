@@ -1,0 +1,191 @@
+{
+    "_说明": "TECHX Robocon Jetson vision runtime. Jetson outputs camera_link coordinates; GMK transforms to robot/arm frames after field hand-eye calibration.",
+    "_class_id约定": "Global class_id: KFS=0~4, weapon heads=100~102, assembly light/success=150~152, QR=200.",
+    "_field_note": "Fixed field network: Jetson=192.168.10.101, GMK=192.168.10.100, UDP=12345. target_ip must be the GMK receiver IP. Assembly/event targets may be sent without valid depth; motion consumers must request require_control_xyz on GMK.",
+    "_quality_note": "For graspable classes KFS=0~4 and weapon heads=100~102, unsafe edge/clipped/not-centered/bad-depth targets stay visible through class/conf/u/v for centering, but their output XYZ is cleared so GMK require_control_xyz grasp requests cannot select them. QR and assembly events are not blocked by this grasp gate.",
+    "udp": {
+        "local_ip": "192.168.10.101",
+        "target_ip": "192.168.10.100",
+        "target_port": 12345
+    },
+    "runtime": {
+        "require_orbbec": true,
+        "strict_detector_load": true
+    },
+    "models": [
+        {
+            "name": "KFS target detection",
+            "folder": "kfs_v3",
+            "enabled": false,
+            "class_id_offset": 0,
+            "class_id_map": {
+                "0": 0,
+                "1": 1,
+                "2": 2,
+                "3": 3,
+                "4": 4,
+                "fake_kfs": 0,
+                "r1_kfs_red": 1,
+                "r1_kfs_blue": 2,
+                "r2_kfs_red": 3,
+                "r2_kfs_blue": 4
+            },
+            "class_names": {
+                "0": "fake_kfs",
+                "1": "r1_kfs_red",
+                "2": "r1_kfs_blue",
+                "3": "r2_kfs_red",
+                "4": "r2_kfs_blue"
+            },
+            "class_confs": {
+                "fake_kfs": 0.15,
+                "r1_kfs_red": 0.15,
+                "r1_kfs_blue": 0.15,
+                "r2_kfs_red": 0.15,
+                "r2_kfs_blue": 0.15
+            }
+        },
+        {
+            "name": "Weapon head detection",
+            "folder": "head_v1",
+            "enabled": true,
+            "class_id_offset": 100,
+            "class_id_map": {
+                "0": 100,
+                "1": 101,
+                "2": 102,
+                "weapon_head_fist": 100,
+                "weapon_head_palm": 101,
+                "weapon_head_spear": 102,
+                "fist": 100,
+                "palm": 101,
+                "spear": 102,
+                "spear_head": 102,
+                "lance": 102
+            },
+            "class_names": {
+                "0": "weapon_head_fist",
+                "1": "weapon_head_palm",
+                "2": "weapon_head_spear"
+            },
+            "class_confs": {
+                "weapon_head_fist": 0.6,
+                "weapon_head_palm": 0.6,
+                "weapon_head_spear": 0.6
+            }
+        },
+        {
+            "name": "Gesture detection",
+            "folder": "gesture",
+            "enabled": false,
+            "class_id_offset": 100,
+            "class_id_map": {
+                "0": 100,
+                "1": 101,
+                "2": 102,
+                "fist": 100,
+                "palm": 101,
+                "sprea": 102,
+                "spear": 102,
+                "weapon_head_fist": 100,
+                "weapon_head_palm": 101,
+                "weapon_head_spear": 102
+            },
+            "class_names": {
+                "0": "fist",
+                "1": "palm",
+                "2": "sprea"
+            },
+            "class_confs": {
+                "fist": 0.45,
+                "palm": 0.45,
+                "sprea": 0.45,
+                "spear": 0.45
+            }
+        }
+    ],
+    "assembly_light": {
+        "enabled": true,
+        "detect_every_n": 1,
+        "roi_xywh": [0, 0, 0, 0],
+        "min_area_px": 80,
+        "max_area_ratio": 0.08,
+        "min_width_px": 8,
+        "min_height_px": 3,
+        "min_aspect_ratio": 2.0,
+        "max_aspect_ratio": 25.0,
+        "min_fill_ratio": 0.30,
+        "min_saturation": 80,
+        "min_brightness": 140,
+        "confidence": 0.85,
+        "event_confidence": 0.90,
+        "max_components_per_color": 2,
+        "emit_color_event": true,
+        "emit_success_event": true,
+        "_colors_note": "灯带颜色可配置。h_min/h_max 为 OpenCV 色相(0-180)，h_min>h_max 表示跨0/180(如红)。success=true 的颜色额外触发 assembly_success(152)。长度/形状由 min_width_px/min_height_px/min_aspect_ratio/min_area_px/max_area_ratio 决定(灯带细长→调高 min_aspect_ratio、按像素长度设 min_width_px)。class_id 152 保留给成功事件。",
+        "colors": [
+            {"name": "assembly_light_orange", "class_id": 150, "h_min": 11, "h_max": 25, "success": true},
+            {"name": "assembly_light_red", "class_id": 151, "h_min": 168, "h_max": 12, "success": false},
+            {"name": "assembly_light_blue", "class_id": 153, "h_min": 95, "h_max": 135, "success": false}
+        ]
+    },
+    "qr": {
+        "enabled": true,
+        "class_id": 200,
+        "class_name": "qr_code",
+        "detect_every_n": 2,
+        "min_size_px": 32,
+        "decoded_confidence": 1.0,
+        "detected_confidence": 0.85
+    },
+    "inference": {
+        "backend": "auto",
+        "conf_threshold": 0.40,
+        "iou_threshold": 0.45,
+        "img_size": 640,
+        "min_box_area": 500,
+        "max_box_area": 250000,
+        "max_aspect_ratio": 10.0,
+        "edge_low_confidence": 0.30,
+        "nms_iou_threshold": 0.35,
+        "containment_threshold": 0.65,
+        "cross_class_nms_iou_threshold": 0.35,
+        "cross_class_near_iou_threshold": 0.25,
+        "cross_class_center_px": 30.0,
+        "fake_kfs_prefer_margin": 0.12,
+        "max_detections_per_frame": 12
+    },
+    "output": {
+        "min_confidence": 0.40,
+        "require_valid_depth": false,
+        "max_targets_per_frame": 10,
+        "sort_by_confidence": true,
+        "log_interval_sec": 2.0,
+        "quality_gate_enabled": false,
+        "quality_edge_margin_px": 30,
+        "quality_center_error_norm": 0.18,
+        "quality_min_depth_valid_ratio": 0.50,
+        "quality_max_depth_spread_m": 0.015,
+        "quality_require_no_fallback": false,
+        "quality_bad_confidence": 0.01
+    },
+    "camera": {
+        "width": 640,
+        "height": 480,
+        "fx": 367.93,
+        "fy": 368.05,
+        "cx": 318.75,
+        "cy": 236.2
+    },
+    "_depth_note": "Depth correction applied as z_corrected_mm = z_raw_mm * scale_corr + offset_mm. Calibrate offset_mm/scale_corr with tools/depth_accuracy_report.py against a known ground-truth distance. depth.csv records z_raw_m (before) and z (after).",
+    "depth": {
+        "offset_mm": -50.0,
+        "scale_corr": 1.0,
+        "min_mm": 200.0,
+        "max_mm": 8000.0
+    },
+    "display": {
+        "confirm_frames": 5,
+        "display_every_n": 10
+    }
+}

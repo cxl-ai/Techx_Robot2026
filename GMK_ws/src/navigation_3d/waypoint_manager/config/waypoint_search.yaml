@@ -1,0 +1,44 @@
+# waypoint_search_node 参数配置
+# 说明：该节点从 goalpoints/waypoints CSV 构建索引与路径规划；local_planner 订阅 /way_point，并在到达后调用 advance_waypoint 推进
+# 使用：ros2 launch waypoint_manager waypoint_search.launch.py
+waypoint_search:
+  ros__parameters:
+    # ----------------------------- CSV 数据来源（航点/目标点）
+    # CSV 目录：当 waypoints_csv/goalpoints_csv 为空时，会自动在该目录下选择最新的一对；waypoints-*.csv=路径航点，goalpoints-*.csv=目标点
+    use_to_nav_dir: ~/nav_ws/project/data/use_to_nav
+    waypoints_csv: ""      # 指定 waypoints CSV 绝对路径（留空=自动选择最新）
+    goalpoints_csv: ""     # 指定 goalpoints CSV 绝对路径（留空=自动选择最新）
+
+    # ----------------------------- 坐标系 / 传感器输入
+    frame_id: world                 # 发布的 goal/waypoint/path/marker 所用 frame_id（需与下游一致）
+    odom_topic: /Odometry          # 里程计输入（用于获取机器人当前位置并规划到目标的路径）
+    terrain_map_topic: /terrain_map # 地形点云输入（用于生成局部障碍多边形，并对 waypoint 做“外推到安全位置”）
+
+    # ----------------------------- ROS2 接口（topic / service）
+    goal_topic: /goal_point_ext              # 发布：目标点（goalpoint），waypoint_manager/msg/GoalPoint
+    viz_marker_topic: /goal_search_markers   # 发布：可视化 MarkerArray（waypoints + goalpoints + 当前状态）
+    path_topic: /goal_search_path            # 发布：路径可视化 nav_msgs/Path（从当前位置到目标的完整路径）
+    poly_viz_topic: /waypoint_polygons       # 发布：多边形可视化（由 terrain_map 构建的局部障碍边界）
+    select_goal_service: select_goal         # 服务：手动选择目标点（floor-index），例如 2-3
+    waypoint_topic: /way_point               # 发布：当前要追踪的 waypoint（local_planner 订阅此话题导航），geometry_msgs/PointStamped
+    advance_waypoint_service: advance_waypoint # 服务：推进到下一个 waypoint（local_planner 在“到达当前 waypoint”时调用）
+    goal_reached_topic: goal_reached         # 发布：当一个 goalpoint 的所有 waypoints 都完成时，发布一次“goal 到达事件”（string= floor-index）
+
+    # ----------------------------- 自动 goalpoint 序列（按参数顺序自动导航多个目标点）
+    # 列表非空=启用；等待首次 odom 后自动发布第一个；列表为空=不自动发布（仍可手动 select_goal）；每完成一个 goalpoint 后延时 N 秒再发下一个
+    goal_sequence_floor_indices: ["1-2" , "1-1", "1-2" , "1-1"]  # 例如: ["2-1", "2-3", "3-2"]
+    goal_sequence_next_delay_sec: 3.0 # 到达一个 goalpoint 后，等待 N 秒再发布下一个
+
+    # ----------------------------- 节点内部刷新频率
+    tracker_check_rate: 10.0 # 当前版本主要由 local_planner 触发 advance_waypoint，保持默认即可
+
+    # ----------------------------- 多边形检测 / waypoint 外推参数
+    poly_grid_range: 5.0        # 围绕机器人构建局部栅格的半径（米）
+    poly_grid_resolution: 0.05  # 栅格分辨率（米）
+    poly_inflate_cells: 1       # 栅格膨胀步数（0=不膨胀；增大可让障碍更“粗”）
+    poly_min_area: 0.15         # 过滤掉面积过小的多边形（m^2）
+    poly_free_radius: 0.1      # waypoint 落在多边形内时，沿“机器人→waypoint”方向外推到边界外的安全距离（米）
+    poly_intensity_thred: 0.6  # 点云强度阈值（高于该值才参与障碍多边形生成；无 intensity 字段则跳过）
+    poly_height_lower: 0.5     # 仅使用 [z - lower, z + upper] 高度范围内的点做障碍提取（米）
+    poly_height_upper: 0.5     # 仅使用 [z - lower, z + upper] 高度范围内的点做障碍提取（米）
+    poly_wall_angle_thred: 8.0 # 墙体过滤角度阈值（度，推荐 5~10）
